@@ -166,7 +166,7 @@ export const getMovieRecommendations = ({ queryKey }) => {
   const [, idPart] = queryKey;
   const { id } = idPart;
   return fetch(
-    `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&page=1`
+    `http://localhost:8080/api/movies/${id}`
   )
     .then((response) => {
       if (!response.ok) {
@@ -185,7 +185,7 @@ export const getSimilarMovies = ({ queryKey }) => {
   const [, idPart] = queryKey;
   const { id } = idPart;
   return fetch(
-    `https://api.themoviedb.org/3/movie/${id}/similar?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US&page=1`
+    `http://localhost:8080/api/movies/${id}`
   )
     .then((response) => {
       if (!response.ok) {
@@ -204,7 +204,7 @@ export const getMovieCredits = ({ queryKey }) => {
   const [, idPart] = queryKey;
   const { id } = idPart;
   return fetch(
-    `https://api.themoviedb.org/3/movie/${id}/credits?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US`
+    `http://localhost:8080/api/movies/${id}`
   )
     .then((response) => {
       if (!response.ok) {
