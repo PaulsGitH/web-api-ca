@@ -252,7 +252,7 @@ export const getPersonMovieCredits = ({ queryKey }) => {
 export const getCompany = ({ queryKey }) => {
   const [, { id }] = queryKey;
   return fetch(
-    `https://api.themoviedb.org/3/company/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}`
+    `http://localhost:8080/api/movies/companies/${id}`
   )
     .then(async (res) => {
       if (!res.ok) {
@@ -271,7 +271,7 @@ export const getCompanyMovies = ({ queryKey }) => {
   const [, idPart] = queryKey;
   const { id } = idPart;
   return fetch(
-    `https://api.themoviedb.org/3/discover/movie?api_key=${import.meta.env.VITE_TMDB_KEY}&with_companies=${id}&language=en-US&page=1`
+    `http://localhost:8080/api/movies/companies/${id}/movies`
   ).then((response) => {
     if (!response.ok) {
       return response.json().then((error) => {
@@ -284,7 +284,7 @@ export const getCompanyMovies = ({ queryKey }) => {
 
 export const getLanguages = () => {
   return fetch(
-    `https://api.themoviedb.org/3/configuration/languages?api_key=${import.meta.env.VITE_TMDB_KEY}`
+    `http://localhost:8080/api/movies/languages`
   )
     .then((response) => {
       if (!response.ok) {
