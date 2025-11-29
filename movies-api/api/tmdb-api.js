@@ -136,3 +136,41 @@ export const searchMovies = async (query) => {
   return await response.json();
 };
 
+export const getPersonDetails = async (id) => {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/person/${id}?api_key=${process.env.TMDB_KEY}&language=en-US`
+  );
+
+  if (!response.ok) {
+    throw new Error((await response.json()).message);
+  }
+
+  return await response.json();
+};
+
+export const getPersonMovieCredits = async (id) => {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/person/${id}/movie_credits?api_key=${process.env.TMDB_KEY}&language=en-US`
+  );
+
+  if (!response.ok) {
+    throw new Error((await response.json()).message);
+  }
+
+  return await response.json();
+};
+
+export const searchPeople = async (query) => {
+  const url = `https://api.themoviedb.org/3/search/person?api_key=${process.env.TMDB_KEY}&language=en-US&query=${encodeURIComponent(
+    query
+  )}&page=1&include_adult=false`;
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.status_message || "People search request failed");
+  }
+
+  return await response.json();
+};

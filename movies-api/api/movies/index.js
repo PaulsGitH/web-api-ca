@@ -1,6 +1,6 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
-import { getMovies, getUpcomingMovies, getGenres, getMovieById, getPopularMovies, getTopRatedMovies, getNowPlayingMovies, getMoviesPage, getNowPlayingMoviesPaged, getUpcomingMoviesPaged, searchMovies } from '../tmdb-api';
+import { getMovies, getUpcomingMovies, getGenres, getMovieById, getPopularMovies, getTopRatedMovies, getNowPlayingMovies, getMoviesPage, getNowPlayingMoviesPaged, getUpcomingMoviesPaged, searchMovies, getPersonDetails, getPersonMovieCredits, searchPeople } from '../tmdb-api';
 
 
 const router = express.Router();
@@ -68,6 +68,29 @@ router.get('/upcoming/page/:page', asyncHandler(async (req, res) => {
   const upcoming = await getUpcomingMoviesPaged(page);
   res.status(200).json(upcoming);
 }));
+
+router.get('/people/search', asyncHandler(async (req, res) => {
+  const query = (req.query.query || '').trim();
+  if (!query || query.length < 2) {
+    return res.status(200).json({ results: [] });
+  }
+
+  const results = await searchPeople(query);
+  res.status(200).json(results);
+}));
+
+router.get('/people/:id/credits', asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const credits = await getPersonMovieCredits(id);
+  res.status(200).json(credits);
+}));
+
+router.get('/people/:id', asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const person = await getPersonDetails(id);
+  res.status(200).json(person);
+}));
+
 
 
 export default router;
