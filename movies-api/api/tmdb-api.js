@@ -84,3 +84,39 @@ export const getNowPlayingMovies = async () => {
 
   return await response.json();
 };
+
+export const getMoviesPage = async (page = 1) => {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_KEY}&language=en-US&include_adult=false&include_video=false&page=${page}`
+  );
+
+  if (!response.ok) {
+    throw new Error((await response.json()).message);
+  }
+
+  return await response.json();
+};
+
+export const getNowPlayingMoviesPaged = async (page = 1) => {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.TMDB_KEY}&language=en-US&page=${page}`
+  );
+
+  if (!response.ok) {
+    throw new Error((await response.json()).message);
+  }
+
+  return await response.json();
+};
+
+export const getUpcomingMoviesPaged = async (page = 1) => {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.TMDB_KEY}&language=en-US&page=${page}`
+  );
+
+  if (!response.ok) {
+    throw new Error((await response.json()).message);
+  }
+
+  return await response.json();
+};
