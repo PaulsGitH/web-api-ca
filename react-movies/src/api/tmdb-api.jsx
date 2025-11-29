@@ -223,7 +223,7 @@ export const getPerson = ({ queryKey }) => {
   const [, idPart] = queryKey;
   const { id } = idPart;
   return fetch(
-     `https://api.themoviedb.org/3/person/${id}?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US`
+     `http://localhost:8080/api/movies/people/${id}`
   ).then((response) => {
     if (!response.ok) {
       return response.json().then((error) => {
@@ -238,7 +238,7 @@ export const getPersonMovieCredits = ({ queryKey }) => {
   const [, idPart] = queryKey;
   const { id } = idPart;
   return fetch(
-    `https://api.themoviedb.org/3/person/${id}/movie_credits?api_key=${import.meta.env.VITE_TMDB_KEY}&language=en-US`
+    `http://localhost:8080/api/movies/people/${id}/credits`
   ).then((response) => {
     if (!response.ok) {
       return response.json().then((error) => {
@@ -328,9 +328,9 @@ export const getSearchPerson = ({ queryKey }) => {
   if (!query || query.trim().length < 2) return Promise.resolve({ results: [] });
 
   return fetch(
-    `https://api.themoviedb.org/3/search/person?api_key=${
-      import.meta.env.VITE_TMDB_KEY
-    }&language=en-US&query=${encodeURIComponent(query)}&page=1&include_adult=false`
+    `http://localhost:8080/api/movies/people/search?query=${encodeURIComponent(
+      query.trim()
+    )}`
   )
     .then((response) => {
       if (!response.ok) {
