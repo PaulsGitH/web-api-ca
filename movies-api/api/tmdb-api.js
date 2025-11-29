@@ -72,3 +72,15 @@ export const getTopRatedMovies = async () => {
 
   return await response.json();
 };
+
+export const getNowPlayingMovies = async () => {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/movie/now_playing?api_key=${process.env.TMDB_KEY}&language=en-US&page=1`
+  );
+
+  if (!response.ok) {
+    throw new Error((await response.json()).message);
+  }
+
+  return await response.json();
+};
