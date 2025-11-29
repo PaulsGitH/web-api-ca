@@ -120,3 +120,19 @@ export const getUpcomingMoviesPaged = async (page = 1) => {
 
   return await response.json();
 };
+
+export const searchMovies = async (query) => {
+  const url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.TMDB_KEY}&language=en-US&query=${encodeURIComponent(
+    query
+  )}&page=1&include_adult=false`;
+
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    const err = await response.json().catch(() => ({}));
+    throw new Error(err.status_message || "Search request failed");
+  }
+
+  return await response.json();
+};
+

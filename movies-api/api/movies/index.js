@@ -1,6 +1,6 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
-import { getMovies, getUpcomingMovies, getGenres, getMovieById, getPopularMovies, getTopRatedMovies, getNowPlayingMovies, getMoviesPage, getNowPlayingMoviesPaged, getUpcomingMoviesPaged } from '../tmdb-api';
+import { getMovies, getUpcomingMovies, getGenres, getMovieById, getPopularMovies, getTopRatedMovies, getNowPlayingMovies, getMoviesPage, getNowPlayingMoviesPaged, getUpcomingMoviesPaged, searchMovies } from '../tmdb-api';
 
 
 const router = express.Router();
@@ -18,6 +18,16 @@ router.get('/upcoming', asyncHandler(async (req, res) => {
 router.get('/genres', asyncHandler(async (req, res) => {
   const genres = await getGenres();
   res.status(200).json(genres);
+}));
+
+router.get('/search', asyncHandler(async (req, res) => {
+  const q = (req.query.q || '').trim();
+  if (!q || q.length < 2) {
+    return res.status(200).json({ results: [] });
+  }
+
+  const results = await searchMovies(q);
+  res.status(200).json(results);
 }));
 
 router.get('/:id', asyncHandler(async (req, res) => {
@@ -58,8 +68,6 @@ router.get('/upcoming/page/:page', asyncHandler(async (req, res) => {
   const upcoming = await getUpcomingMoviesPaged(page);
   res.status(200).json(upcoming);
 }));
-
-
 
 
 export default router;
