@@ -308,9 +308,7 @@ export const getSearchMovies = ({ queryKey }) => {
   }
 
   return fetch(
-    `https://api.themoviedb.org/3/search/movie?api_key=${
-      import.meta.env.VITE_TMDB_KEY
-    }&language=en-US&query=${encodeURIComponent(q)}&page=1&include_adult=false`
+    `http://localhost:8080/api/movies/search?q=${encodeURIComponent(q)}`
   )
     .then((response) => {
       if (!response.ok) {
