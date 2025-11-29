@@ -1,6 +1,6 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
-import { getMovies, getUpcomingMovies, getGenres, getMovieById, getPopularMovies, getTopRatedMovies, getNowPlayingMovies, getMoviesPage, getNowPlayingMoviesPaged, getUpcomingMoviesPaged, searchMovies, getPersonDetails, getPersonMovieCredits, searchPeople } from '../tmdb-api';
+import { getMovies, getUpcomingMovies, getGenres, getMovieById, getPopularMovies, getTopRatedMovies, getNowPlayingMovies, getMoviesPage, getNowPlayingMoviesPaged, getUpcomingMoviesPaged, searchMovies, getPersonDetails, getPersonMovieCredits, searchPeople, getCompanyDetails, getCompanyMoviesList, getLanguagesConfig } from '../tmdb-api';
 
 
 const router = express.Router();
@@ -28,6 +28,23 @@ router.get('/search', asyncHandler(async (req, res) => {
 
   const results = await searchMovies(q);
   res.status(200).json(results);
+}));
+
+router.get('/companies/:id', asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const company = await getCompanyDetails(id);
+  res.status(200).json(company);
+}));
+
+router.get('/companies/:id/movies', asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const movies = await getCompanyMoviesList(id);
+  res.status(200).json(movies);
+}));
+
+router.get('/languages', asyncHandler(async (req, res) => {
+  const languages = await getLanguagesConfig();
+  res.status(200).json(languages);
 }));
 
 router.get('/:id', asyncHandler(async (req, res) => {

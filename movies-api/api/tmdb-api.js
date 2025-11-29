@@ -174,3 +174,39 @@ export const searchPeople = async (query) => {
 
   return await response.json();
 };
+
+export const getCompanyDetails = async (id) => {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/company/${id}?api_key=${process.env.TMDB_KEY}`
+  );
+
+  if (!response.ok) {
+    throw new Error((await response.json()).message);
+  }
+
+  return await response.json();
+};
+
+export const getCompanyMoviesList = async (id) => {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.TMDB_KEY}&with_companies=${id}&language=en-US&page=1`
+  );
+
+  if (!response.ok) {
+    throw new Error((await response.json()).message);
+  }
+
+  return await response.json();
+};
+
+export const getLanguagesConfig = async () => {
+  const response = await fetch(
+    `https://api.themoviedb.org/3/configuration/languages?api_key=${process.env.TMDB_KEY}`
+  );
+
+  if (!response.ok) {
+    throw new Error((await response.json()).message);
+  }
+
+  return await response.json();
+};
