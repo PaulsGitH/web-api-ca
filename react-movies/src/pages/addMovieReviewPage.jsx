@@ -1,21 +1,25 @@
 import React from "react";
 import PageTemplate from "../components/templateMoviePage";
 import ReviewForm from "../components/reviewForm";
-import { useLocation } from "react-router";
+import { useLocation, Navigate } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { getMovie } from "../api/tmdb-api";
 import Spinner from "../components/spinner";
 
 const AddMovieReviewPage = () => {
   const location = useLocation();
-  const movieId = location.state.movieId;
+  const movieId = location.state?.movieId;
 
-  const { data: movie, error, isLoading, isError } = useQuery({
+  if (!movieId) {
+    return <Navigate to="/" replace />;
+  }
+
+  const { data: movie, error, isPending, isError } = useQuery({
     queryKey: ["movie", { id: movieId }],
     queryFn: getMovie,
   });
 
-  if (isLoading) {
+  if (isPending) {
     return <Spinner />;
   }
 

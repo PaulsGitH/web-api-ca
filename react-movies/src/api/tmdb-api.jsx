@@ -82,9 +82,8 @@ export const getMovieImages = ({ queryKey }) => {
 export const getMovieReviews = ({ queryKey }) => {
   const [, idPart] = queryKey;
   const { id } = idPart;
-  return fetch(
-    `http://localhost:8080/api/movies/${id}`
-  )
+
+  return fetch(`http://localhost:8080/api/movies/${id}`)
     .then((response) => {
       if (!response.ok) {
         return response.json().then((error) => {
@@ -93,10 +92,13 @@ export const getMovieReviews = ({ queryKey }) => {
       }
       return response.json();
     })
+    .then((movie) => movie.reviews || { results: [] })
     .catch((error) => {
       throw error;
     });
 };
+
+
 
 
 export const getUpcomingMovies = () => {
@@ -174,9 +176,8 @@ export const getNowPlayingMovies = () => {
 export const getMovieRecommendations = ({ queryKey }) => {
   const [, idPart] = queryKey;
   const { id } = idPart;
-  return fetch(
-    `http://localhost:8080/api/movies/${id}`
-  )
+
+  return fetch(`http://localhost:8080/api/movies/${id}`)
     .then((response) => {
       if (!response.ok) {
         return response.json().then((error) => {
@@ -185,17 +186,20 @@ export const getMovieRecommendations = ({ queryKey }) => {
       }
       return response.json();
     })
+    .then((movie) => movie.recommendations || { results: [] })
     .catch((error) => {
       throw error;
     });
 };
+
+
+
 
 export const getSimilarMovies = ({ queryKey }) => {
   const [, idPart] = queryKey;
   const { id } = idPart;
-  return fetch(
-    `http://localhost:8080/api/movies/${id}`
-  )
+
+  return fetch(`http://localhost:8080/api/movies/${id}`)
     .then((response) => {
       if (!response.ok) {
         return response.json().then((error) => {
@@ -204,17 +208,19 @@ export const getSimilarMovies = ({ queryKey }) => {
       }
       return response.json();
     })
+    .then((movie) => movie.similar || { results: [] })
     .catch((error) => {
       throw error;
     });
 };
 
+
+
 export const getMovieCredits = ({ queryKey }) => {
   const [, idPart] = queryKey;
   const { id } = idPart;
-  return fetch(
-    `http://localhost:8080/api/movies/${id}`
-  )
+
+  return fetch(`http://localhost:8080/api/movies/${id}`)
     .then((response) => {
       if (!response.ok) {
         return response.json().then((error) => {
@@ -223,10 +229,13 @@ export const getMovieCredits = ({ queryKey }) => {
       }
       return response.json();
     })
+    .then((movie) => movie.credits || { cast: [], crew: [] })
     .catch((error) => {
       throw error;
     });
 };
+
+
 
 export const getPerson = ({ queryKey }) => {
   const [, idPart] = queryKey;

@@ -18,7 +18,7 @@ const MovieRecommendationsPage = () => {
   if (isPending) return <Spinner />;
   if (isError) return <h1>{error.message}</h1>;
 
-  const movies = data?.results || [];
+  const movies = Array.isArray(data) ? data : data?.results || [];
 
   return (
     <PageTemplate
