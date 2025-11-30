@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -12,6 +12,7 @@ import { styled } from "@mui/material/styles";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Box from "@mui/material/Box";
+import { AuthContext } from "../../contexts/authContext";
 
 const Offset = styled("div")(({ theme }) => theme.mixins.toolbar);
 
@@ -24,6 +25,8 @@ const SiteHeader = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { isAuthenticated, userName, logout } = useContext(AuthContext);
 
   const menuOptions = [
     { label: "Home", path: "/" },
@@ -98,6 +101,24 @@ const SiteHeader = () => {
                     {opt.label}
                   </MenuItem>
                 ))}
+
+                {!isAuthenticated && (
+                  <>
+                    <MenuItem onClick={() => handleMenuSelect("/login")}>Login</MenuItem>
+                    <MenuItem onClick={() => handleMenuSelect("/signup")}>Sign up</MenuItem>
+                  </>
+                )}
+
+                {isAuthenticated && (
+                  <MenuItem
+                    onClick={() => {
+                      logout();
+                      handleMenuSelect("/");
+                    }}
+                  >
+                    Logout
+                  </MenuItem>
+                )}
               </Menu>
             </>
           ) : (
@@ -121,6 +142,59 @@ const SiteHeader = () => {
                   </Button>
                 );
               })}
+
+              <Box sx={{ ml: 2, display: "flex", alignItems: "center", gap: 2 }}>
+                {!isAuthenticated && (
+                  <>
+                    <Button
+                      color="inherit"
+                      onClick={() => navigate("/login")}
+                      sx={{
+                        mx: 0.5,
+                        "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
+                        borderRadius: 10,
+                      }}
+                    >
+                      Login
+                    </Button>
+
+                    <Button
+                      color="inherit"
+                      onClick={() => navigate("/signup")}
+                      sx={{
+                        mx: 0.5,
+                        "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
+                        borderRadius: 10,
+                      }}
+                    >
+                      Sign up
+                    </Button>
+                  </>
+                )}
+
+                {isAuthenticated && (
+                  <>
+                    <Typography variant="body1" sx={{ fontWeight: 600 }}>
+                      Signed in as {userName}
+                    </Typography>
+
+                    <Button
+                      color="inherit"
+                      onClick={() => {
+                        logout();
+                        navigate("/");
+                      }}
+                      sx={{
+                        mx: 0.5,
+                        "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
+                        borderRadius: 10,
+                      }}
+                    >
+                      Logout
+                    </Button>
+                  </>
+                )}
+              </Box>
             </>
           )}
         </Toolbar>
@@ -131,4 +205,3 @@ const SiteHeader = () => {
 };
 
 export default SiteHeader;
-
