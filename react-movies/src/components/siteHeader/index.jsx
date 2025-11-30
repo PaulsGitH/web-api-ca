@@ -30,14 +30,20 @@ const SiteHeader = () => {
 
   const menuOptions = [
     { label: "Home", path: "/" },
-    { label: "Favorites", path: "/movies/favorites" },
     { label: "Upcoming", path: "/movies/upcoming" },
     { label: "Popular", path: "/movies/popular" },
     { label: "Top Rated", path: "/movies/top_rated" },
     { label: "Now Playing", path: "/movies/now-playing" },
-    { label: "Must Watch", path: "/movies/mustwatch" },
     { label: "Search", path: "/movies/search" },
     { label: "Actors", path: "/movies/actors" },
+
+    // Only shown when logged in:
+    ...(isAuthenticated
+      ? [
+          { label: "Favorites", path: "/movies/favorites" },
+          { label: "Must Watch", path: "/movies/mustwatch" },
+        ]
+      : [])
   ];
 
   const handleMenuSelect = (pageURL) => {
@@ -205,3 +211,4 @@ const SiteHeader = () => {
 };
 
 export default SiteHeader;
+
