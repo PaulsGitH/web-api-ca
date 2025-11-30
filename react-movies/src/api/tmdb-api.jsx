@@ -16,11 +16,19 @@ export const getMovies = () => {
 
 
 export const getMovie = (args) => {
-  const [, idPart] = args.queryKey;
-  const { id } = idPart;
-  return fetch(
-    `http://localhost:8080/api/movies/${id}`
-  )
+  let id;
+
+  if (typeof args === "string" || typeof args === "number") {
+    id = args;
+  }
+  else if (Array.isArray(args?.queryKey)) {
+    const [, idPart] = args.queryKey;
+    id = idPart?.id;
+  } else {
+    throw new Error("getMovie called with unsupported arguments");
+  }
+
+  return fetch(`http://localhost:8080/api/movies/${id}`)
     .then((response) => {
       if (!response.ok) {
         return response.json().then((error) => {
@@ -33,6 +41,7 @@ export const getMovie = (args) => {
       throw error;
     });
 };
+
 
 export const getGenres = () => {
   return fetch(

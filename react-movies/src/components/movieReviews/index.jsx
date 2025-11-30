@@ -26,7 +26,7 @@ export default function MovieReviews({ movie }) {
     return <h1>{error.message}</h1>;
   }
 
-  const reviews = data.results;
+  const reviews = data?.results || [];
 
   return (
     <TableContainer component={Paper}>
