@@ -73,7 +73,7 @@ const App = () => {
                 <Routes>
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/signup" element={<SignUpPage />} />
-                  <Route path="/reviews/form" element={<AddMovieReviewPage />} />
+                  <Route path="/reviews/form" element={<ProtectedRoute> <AddMovieReviewPage /> </ProtectedRoute>} />
                   <Route path="/reviews/:id" element={<MovieReviewPage />} />
                   <Route path="/movies/favorites" element={<ProtectedRoute> <FavoriteMoviesPage /> </ProtectedRoute>} />
                   <Route path="/movies/upcoming" element={<UpcomingMoviesPage />} />
