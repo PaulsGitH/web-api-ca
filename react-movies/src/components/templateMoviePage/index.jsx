@@ -8,9 +8,15 @@ import { useQuery } from "@tanstack/react-query";
 import Spinner from "../spinner";
 
 const TemplateMoviePage = ({ movie, children }) => {
+  // Guard while the movie details are still loading
+  if (!movie) {
+    return <Spinner />;
+  }
+
   const { data, error, isPending, isError } = useQuery({
     queryKey: ["images", { id: movie.id }],
     queryFn: getMovieImages,
+    enabled: !!movie.id,
   });
 
   if (isPending) {
@@ -21,7 +27,8 @@ const TemplateMoviePage = ({ movie, children }) => {
     return <h1>{error.message}</h1>;
   }
 
-  const images = data.posters;
+  // Movies API returns the full movie with images nested under `images.posters`
+  const images = data?.images?.posters || [];
 
   return (
     <>
