@@ -24,6 +24,8 @@ import MustWatchMoviesPage from "./pages/mustWatchMoviesPage";
 import SearchMoviesPage from "./pages/searchMoviesPage";
 import SearchActorsPage from "./pages/searchActorsPage";
 import NotifyProvider from "./components/notifyProvider";
+import AuthContextProvider from "./contexts/authContext";
+
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -60,10 +62,11 @@ const App = () => {
         <CssBaseline />
         <GlobalStyles styles={{ a: { textDecoration: "none", color: "inherit" } }} />
         <BrowserRouter>
-          <SiteHeader />
-          <NotifyProvider>
-            <MoviesContextProvider>
-              <Routes>
+          <AuthContextProvider>
+            <SiteHeader />
+            <NotifyProvider>
+              <MoviesContextProvider>
+                <Routes>
                 <Route path="/reviews/form" element={<AddMovieReviewPage />} />
                 <Route path="/reviews/:id" element={<MovieReviewPage />} />
                 <Route path="/movies/favorites" element={<FavoriteMoviesPage />} />
@@ -82,9 +85,10 @@ const App = () => {
                 <Route path="/movies/actors" element={<SearchActorsPage />} />
                 <Route path="/" element={<HomePage />} />
                 <Route path="*" element={<Navigate to="/" />} />
-              </Routes>
-            </MoviesContextProvider>
-          </NotifyProvider>
+             </Routes>
+              </MoviesContextProvider>
+            </NotifyProvider>
+          </AuthContextProvider>
         </BrowserRouter>
         <ReactQueryDevtools initialIsOpen={false} />
       </ThemeProvider>
