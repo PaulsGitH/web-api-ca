@@ -12,16 +12,27 @@ const LoginPage = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!userName.trim() || !password.trim()) {
+      setFormError("Username and password are required.");
+      return;
+    }
+
     setSubmitting(true);
+    setFormError("");
+
     try {
-      await login(userName, password);
+      await login(userName.trim(), password);
       notify("Login successful");
       navigate("/");
     } catch (error) {
-      notify(error.message || "Login failed");
+      const message = error.message || "Login failed";
+      setFormError(message);
+      notify(message);
     } finally {
       setSubmitting(false);
     }
@@ -33,6 +44,13 @@ const LoginPage = () => {
         <Typography variant="h5" gutterBottom>
           Login
         </Typography>
+
+        {formError && (
+          <Typography variant="body2" color="error" sx={{ mb: 1 }}>
+            {formError}
+          </Typography>
+        )}
+
         <Box component="form" onSubmit={handleSubmit} noValidate>
           <TextField
             margin="normal"
@@ -67,3 +85,4 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
