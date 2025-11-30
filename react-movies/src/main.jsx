@@ -5,6 +5,7 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider, createTheme, CssBaseline, GlobalStyles } from "@mui/material";
 import SiteHeader from "./components/siteHeader";
+import ProtectedRoute from "./components/protectedRoutes";
 import HomePage from "./pages/homePage";
 import MoviePage from "./pages/movieDetailsPage";
 import FavoriteMoviesPage from "./pages/favoriteMoviesPage";
@@ -27,6 +28,7 @@ import NotifyProvider from "./components/notifyProvider";
 import AuthContextProvider from "./contexts/authContext";
 import LoginPage from "./pages/loginPage";
 import SignUpPage from "./pages/signUpPage";
+
 
 
 const queryClient = new QueryClient({
@@ -73,7 +75,7 @@ const App = () => {
                   <Route path="/signup" element={<SignUpPage />} />
                   <Route path="/reviews/form" element={<AddMovieReviewPage />} />
                   <Route path="/reviews/:id" element={<MovieReviewPage />} />
-                  <Route path="/movies/favorites" element={<FavoriteMoviesPage />} />
+                  <Route path="/movies/favorites" element={<ProtectedRoute> <FavoriteMoviesPage /> </ProtectedRoute>} />
                   <Route path="/movies/upcoming" element={<UpcomingMoviesPage />} />
                   <Route path="/movies/popular" element={<PopularMoviesPage />} />
                   <Route path="/movies/top_rated" element={<TopRatedMoviesPage />} />
@@ -84,7 +86,7 @@ const App = () => {
                   <Route path="/person/:id" element={<PersonDetailsPage />} />
                   <Route path="/company/:id" element={<CompanyDetailsPage />} />
                   <Route path="/movies/:id" element={<MoviePage />} />
-                  <Route path="/movies/mustwatch" element={<MustWatchMoviesPage />} />
+                  <Route path="/movies/mustwatch" element={<ProtectedRoute> <MustWatchMoviesPage /> </ProtectedRoute>} />
                   <Route path="/movies/search" element={<SearchMoviesPage />} />
                   <Route path="/movies/actors" element={<SearchActorsPage />} />
                   <Route path="/" element={<HomePage />} />
