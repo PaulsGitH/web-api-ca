@@ -3,7 +3,8 @@ import express from 'express';
 import './db';
 import cors from 'cors';
 import usersRouter from './api/users';
-import moviesRouter from './api/movies';   
+import moviesRouter from './api/movies';
+import reviewsRouter from './api/reviews'; 
 import authenticate from './authenticate';
 
 
@@ -33,6 +34,8 @@ app.use(express.json());
 app.use('/api/users', usersRouter);
 
 app.use('/api/movies', moviesRouter); 
+
+app.use('/api/reviews', reviewsRouter);
 
 app.use(errHandler);
 
