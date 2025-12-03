@@ -64,8 +64,13 @@ export default function MovieReviews({ movie }) {
       created_at: r.createdAt,
       author_details: { rating: r.rating ?? null },
       isUserReview: true,
+      fullData: r,
     })),
-    ...tmdbReviews,
+    ...tmdbReviews.map((r) => ({
+      ...r,
+      isUserReview: false,
+      fullData: r,
+    })),
   ];
 
   if (combinedReviews.length === 0) {
@@ -102,23 +107,42 @@ export default function MovieReviews({ movie }) {
               <TableCell align="right">More</TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
             {combinedReviews.map((r) => (
               <TableRow key={r.id}>
                 <TableCell component="th" scope="row">
                   {r.author}
                 </TableCell>
+
                 <TableCell>{excerpt(r.content)}</TableCell>
-                <TableCell>
+
+                <TableCell align="right">
                   <Link
                     to={`/reviews/${r.id}`}
                     state={{
-                      review: r,
+                      review: r.fullData,
                       movie: movie,
                     }}
                   >
                     Full Review
                   </Link>
+
+                  {isAuthenticated && r.isUserReview && (
+                    <Button
+                      variant="text"
+                      size="small"
+                      sx={{ ml: 1 }}
+                      component={Link}
+                      to="/reviews/edit"
+                      state={{
+                        review: r.fullData,
+                        movie: movie,
+                      }}
+                    >
+                      Edit
+                    </Button>
+                  )}
                 </TableCell>
               </TableRow>
             ))}

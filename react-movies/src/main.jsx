@@ -28,6 +28,7 @@ import NotifyProvider from "./components/notifyProvider";
 import AuthContextProvider from "./contexts/authContext";
 import LoginPage from "./pages/loginPage";
 import SignUpPage from "./pages/signUpPage";
+import EditMovieReviewPage from "./pages/editMovieReviewPage.jsx";
 
 
 
@@ -87,6 +88,7 @@ const App = () => {
                   <Route path="/company/:id" element={<CompanyDetailsPage />} />
                   <Route path="/movies/:id" element={<MoviePage />} />
                   <Route path="/movies/mustwatch" element={<ProtectedRoute> <MustWatchMoviesPage /> </ProtectedRoute>} />
+                  <Route path="/reviews/edit" element={<ProtectedRoute><EditMovieReviewPage /></ProtectedRoute>} />
                   <Route path="/movies/search" element={<SearchMoviesPage />} />
                   <Route path="/movies/actors" element={<SearchActorsPage />} />
                   <Route path="/" element={<HomePage />} />

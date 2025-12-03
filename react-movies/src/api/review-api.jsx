@@ -113,3 +113,15 @@ export const getUserMovieReviews = async (movieId, token) => {
 
   return response.json();
 };
+
+export const updateUserReview = async (id, updatedReview, token) => {
+  const response = await fetch(`/api/reviews/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+    body: JSON.stringify(updatedReview),
+  });
+  return response.json();
+};
