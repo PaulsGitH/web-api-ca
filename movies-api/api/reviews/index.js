@@ -45,4 +45,34 @@ router.post(
   })
 );
 
+// Returns all user reviews for a specific movie
+router.get(
+  '/movie/:movieId',
+  asyncHandler(async (req, res) => {
+    const movieId = Number(req.params.movieId);
+
+    if (Number.isNaN(movieId)) {
+      return res.status(400).json({ success: false, msg: 'movieId must be a number.' });
+    }
+
+    const reviews = await UserReview.find({ movieId }).sort({ createdAt: -1 });
+    res.status(200).json(reviews);
+  })
+);
+
+// Deletes a review by id
+router.delete(
+  '/:id',
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const review = await UserReview.findByIdAndDelete(id);
+
+    if (!review) {
+      return res.status(404).json({ success: false, msg: 'Review not found.' });
+    }
+
+    res.status(200).json({ success: true, msg: 'Review deleted.' });
+  })
+);
+
 export default router;
