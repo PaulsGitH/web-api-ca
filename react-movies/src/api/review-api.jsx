@@ -1,0 +1,90 @@
+const API_BASE = "http://localhost:8080/api/reviews";
+
+const getAuthHeader = () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    throw new Error("Not authenticated. Please login to manage reviews.");
+  }
+  return { Authorization: token };
+};
+
+const handleResponse = async (response) => {
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const message = data.msg || data.error || "Request to Reviews API failed";
+    throw new Error(message);
+  }
+
+  return data;
+};
+
+// GET reviews for the logged-in user
+export const getMyReviews = async () => {
+  const headers = {
+    ...getAuthHeader(),
+  };
+
+  const response = await fetch(API_BASE, {
+    method: "GET",
+    headers,
+  });
+
+  return handleResponse(response);
+};
+
+// GET this user's reviews for a specific movie
+export const getMyReviewsForMovie = async (movieId) => {
+  if (!movieId) {
+    throw new Error("movieId is required to fetch reviews for a movie.");
+  }
+
+  const headers = {
+    ...getAuthHeader(),
+  };
+
+  const response = await fetch(`${API_BASE}/movie/${movieId}`, {
+    method: "GET",
+    headers,
+  });
+
+  return handleResponse(response);
+};
+
+// POST create a new review for this user
+export const createUserReview = async ({ movieId, rating, content }) => {
+  if (!movieId || rating === undefined || !content) {
+    throw new Error("movieId, rating and content are required to create a review.");
+  }
+
+  const headers = {
+    "Content-Type": "application/json",
+    ...getAuthHeader(),
+  };
+
+  const response = await fetch(API_BASE, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ movieId, rating, content }),
+  });
+
+  return handleResponse(response);
+};
+
+// DELETE delete this user's review
+export const deleteUserReview = async (id) => {
+  if (!id) {
+    throw new Error("id is required to delete a review.");
+  }
+
+  const headers = {
+    ...getAuthHeader(),
+  };
+
+  const response = await fetch(`${API_BASE}/${id}`, {
+    method: "DELETE",
+    headers,
+  });
+
+  return handleResponse(response);
+};
