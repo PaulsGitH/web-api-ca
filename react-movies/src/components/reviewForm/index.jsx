@@ -9,6 +9,7 @@ import MuiAlert from "@mui/material/Alert";
 import { useNavigate } from "react-router";
 import { useForm, Controller } from "react-hook-form";
 import { MoviesContext } from "../../contexts/moviesContext";
+import { createUserReview } from "../../api/review-api";
 
 const ratings = [
   { value: 5, label: "Excellent" },
@@ -68,12 +69,28 @@ const ReviewForm = ({ movie }) => {
     navigate("/movies/favorites");
   };
 
-  const onSubmit = (review) => {
-    review.movieId = movie.id;
-    review.rating = rating;
-    context.addReview(movie, review);
-    setOpen(true);
+  const onSubmit = async (review) => {
+  const payload = {
+    movieId: movie.id,
+    rating,
+    content: review.review,
   };
+
+  context.addReview(movie, {
+    ...review,
+    movieId: movie.id,
+    rating,
+  });
+
+  try {
+    await createUserReview(payload);
+  } catch (error) {
+    console.error("Failed to save review to UserReviews API", error);
+  }
+
+  setOpen(true);
+};
+
 
   return (
     <Box component="div" sx={styles.root}>
