@@ -68,6 +68,7 @@ router.get(
 // Deletes a review by id
 router.delete(
   '/:id',
+  authenticate,       
   asyncHandler(async (req, res) => {
     const { id } = req.params;
     const username = req.user.username;
@@ -81,5 +82,3 @@ router.delete(
     res.status(200).json({ success: true, msg: 'Review deleted.' });
   })
 );
-
-export default router;
