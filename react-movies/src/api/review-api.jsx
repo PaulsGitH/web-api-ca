@@ -115,13 +115,30 @@ export const getUserMovieReviews = async (movieId, token) => {
 };
 
 export const updateUserReview = async (id, updatedReview, token) => {
-  const response = await fetch(`/api/reviews/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: token,
-    },
-    body: JSON.stringify(updatedReview),
-  });
-  return response.json();
+  const response = await fetch(
+    `http://localhost:8080/api/reviews/${id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify(updatedReview),
+    }
+  );
+
+  let data;
+  try {
+    data = await response.json();
+  } catch {
+    data = {};
+  }
+
+  if (!response.ok || data.success === false) {
+    const message = data.msg || "Failed to update review";
+    throw new Error(message);
+  }
+
+  return data;
 };
+

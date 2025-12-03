@@ -22,10 +22,23 @@ const EditMovieReviewPage = () => {
     },
   });
 
-  const onSubmit = async (formValues) => {
-      await updateUserReview(review._id, formValues, token);
-      navigate(-1);
-  };
+ const onSubmit = async (formValues) => {
+  try {
+    await updateUserReview(
+      review._id,
+      {
+        rating: formValues.rating,
+        content: formValues.content,
+      },
+      token
+    );
+    navigate(-1);
+  } catch (err) {
+    console.error(err);
+    alert(err.message || "Failed to update review");
+  }
+};
+
 
   return (
     <Paper sx={{ p: 3 }}>

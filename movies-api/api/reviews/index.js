@@ -83,4 +83,32 @@ router.delete(
   })
 );
 
+// Update a review by id
+router.put(
+  '/:id',
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const username = req.user.username;
+    const { rating, content } = req.body;
+
+    const review = await UserReview.findOneAndUpdate(
+      { _id: id, username },
+      {
+        rating,
+        content,
+      },
+      { new: true }
+    );
+
+    if (!review) {
+      return res
+        .status(404)
+        .json({ success: false, msg: 'Review not found.' });
+    }
+
+    res.status(200).json({ success: true, review });
+  })
+);
+
+
 export default router;
