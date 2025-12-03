@@ -12,33 +12,67 @@ import Typography from "@mui/material/Typography";
 import { Link } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { getMovieReviews } from "../../api/tmdb-api";
+import { getUserMovieReviews } from "../../api/review-api";
 import { excerpt } from "../../util";
 import Spinner from "../spinner";
 import { AuthContext } from "../../contexts/authContext";
 
 export default function MovieReviews({ movie }) {
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, token } = useContext(AuthContext);
 
-  const { data, error, isPending, isError } = useQuery({
+  const {
+    data: tmdbData,
+    error: tmdbError,
+    isPending: tmdbPending,
+    isError: tmdbIsError,
+  } = useQuery({
     queryKey: ["reviews", { id: movie.id }],
     queryFn: getMovieReviews,
   });
 
-  if (isPending) {
+  const {
+    data: userData,
+    error: userError,
+    isPending: userPending,
+    isError: userIsError,
+  } = useQuery({
+    queryKey: ["user-reviews", { movieId: movie.id }],
+    queryFn: () => getUserMovieReviews(movie.id, token),
+    enabled: isAuthenticated && !!movie.id && !!token,
+  });
+
+  if (tmdbPending || (isAuthenticated && userPending)) {
     return <Spinner />;
   }
 
-  if (isError) {
-    return <h1>{error.message}</h1>;
+  if (tmdbIsError) {
+    return <h1>{tmdbError.message}</h1>;
   }
 
-  const reviews = data?.results || [];
+  if (userIsError) {
+    console.error(userError);
+  }
 
-  if (reviews.length === 0) {
+  const tmdbReviews = tmdbData?.results || [];
+  const userReviews = Array.isArray(userData) ? userData : [];
+
+  const combinedReviews = [
+    ...userReviews.map((r) => ({
+      id: r._id,
+      author: r.username,
+      content: r.content,
+      created_at: r.createdAt,
+      author_details: { rating: r.rating ?? null },
+      isUserReview: true,
+    })),
+    ...tmdbReviews,
+  ];
+
+  if (combinedReviews.length === 0) {
     return (
       <Paper sx={{ p: 3 }}>
         <Typography variant="h6" sx={{ mb: 1 }}>
-          No reviews from TMDB for this movie yet.
+          No reviews for this movie yet.
         </Typography>
         {isAuthenticated ? (
           <Button
@@ -51,9 +85,7 @@ export default function MovieReviews({ movie }) {
             Write a review
           </Button>
         ) : (
-          <Typography variant="body2">
-            Sign in to write a review.
-          </Typography>
+          <Typography variant="body2">Sign in to write a review.</Typography>
         )}
       </Paper>
     );
@@ -71,7 +103,7 @@ export default function MovieReviews({ movie }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {reviews.map((r) => (
+            {combinedReviews.map((r) => (
               <TableRow key={r.id}>
                 <TableCell component="th" scope="row">
                   {r.author}

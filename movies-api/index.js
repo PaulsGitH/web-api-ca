@@ -4,7 +4,7 @@ import './db';
 import cors from 'cors';
 import usersRouter from './api/users';
 import moviesRouter from './api/movies';
-import reviewsRouter from './api/reviews'; 
+import reviewsRouter from './api/reviews/index.js';
 import authenticate from './authenticate';
 
 

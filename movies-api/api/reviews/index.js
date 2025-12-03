@@ -1,6 +1,6 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
-import UserReview from './reviewModel.js';
+import UserReview from './reviewModel';
 import authenticate from '../../authenticate';
 
 const router = express.Router();
@@ -82,3 +82,5 @@ router.delete(
     res.status(200).json({ success: true, msg: 'Review deleted.' });
   })
 );
+
+export default router;

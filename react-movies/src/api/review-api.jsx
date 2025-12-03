@@ -88,3 +88,28 @@ export const deleteUserReview = async (id) => {
 
   return handleResponse(response);
 };
+
+//display user review
+
+export const getUserMovieReviews = async (movieId, token) => {
+  if (!token) {
+    return []; // not logged in, no user reviews to fetch
+  }
+
+  const response = await fetch(
+    `http://localhost:8080/api/reviews/movie/${movieId}`,
+    {
+      headers: {
+        Authorization: token,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    // backend will send 401/403 if token is invalid
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.msg || "Failed to load user reviews");
+  }
+
+  return response.json();
+};
