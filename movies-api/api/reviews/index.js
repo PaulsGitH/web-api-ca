@@ -67,21 +67,35 @@ router.get(
 
 // Deletes a review by id
 router.delete(
-  '/:id',
-  authenticate,       
+  "/:id",
   asyncHandler(async (req, res) => {
     const { id } = req.params;
-    const username = req.user.username;
 
-    const review = await UserReview.findOneAndDelete({ _id: id, username });
-
-    if (!review) {
-      return res.status(404).json({ success: false, msg: 'Review not found.' });
+    if (!req.user || !req.user.username) {
+      return res
+        .status(401)
+        .json({ success: false, msg: "Not authenticated." });
     }
 
-    res.status(200).json({ success: true, msg: 'Review deleted.' });
+    const username = req.user.username;
+
+    const review = await UserReview.findOneAndDelete({
+      _id: id,
+      username,
+    });
+
+    if (!review) {
+      return res
+        .status(404)
+        .json({ success: false, msg: "Review not found for this user." });
+    }
+
+    return res
+      .status(200)
+      .json({ success: true, msg: "Review deleted successfully." });
   })
 );
+
 
 // Update a review by id
 router.put(

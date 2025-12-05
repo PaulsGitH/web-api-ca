@@ -60,16 +60,15 @@ export default function MovieReviews({ movie }) {
     ...userReviews.map((r) => ({
       id: r._id,
       author: r.username,
+      username: r.username,
       content: r.content,
       created_at: r.createdAt,
       author_details: { rating: r.rating ?? null },
       isUserReview: true,
-      fullData: r,
     })),
     ...tmdbReviews.map((r) => ({
       ...r,
       isUserReview: false,
-      fullData: r,
     })),
   ];
 
@@ -107,7 +106,6 @@ export default function MovieReviews({ movie }) {
               <TableCell align="right">More</TableCell>
             </TableRow>
           </TableHead>
-
           <TableBody>
             {combinedReviews.map((r) => (
               <TableRow key={r.id}>
@@ -121,7 +119,7 @@ export default function MovieReviews({ movie }) {
                   <Link
                     to={`/reviews/${r.id}`}
                     state={{
-                      review: r.fullData,
+                      review: r,
                       movie: movie,
                     }}
                   >
@@ -136,7 +134,7 @@ export default function MovieReviews({ movie }) {
                       component={Link}
                       to="/reviews/edit"
                       state={{
-                        review: r.fullData,
+                        review: r,
                         movie: movie,
                       }}
                     >

@@ -78,7 +78,8 @@ export const deleteUserReview = async (id) => {
   }
 
   const headers = {
-    ...getAuthHeader(),
+    ...getAuthHeader(),        // adds Authorization: BEARER <token>
+    "Content-Type": "application/json",
   };
 
   const response = await fetch(`${API_BASE}/${id}`, {
@@ -88,6 +89,8 @@ export const deleteUserReview = async (id) => {
 
   return handleResponse(response);
 };
+
+
 
 //display user review
 
