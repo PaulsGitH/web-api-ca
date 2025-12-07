@@ -3,25 +3,59 @@ import { useNotify } from "../components/notifyProvider";
 
 export const MoviesContext = React.createContext(null);
 
+const STORAGE_KEYS = {
+  favorites: "movies.favorites",
+  mustWatch: "movies.mustWatch",
+};
+
+const safeLoadArray = (key) => {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
+
 const MoviesContextProvider = (props) => {
   const notify = typeof useNotify === "function" ? useNotify() : () => {};
 
-  const [favorites, setFavorites] = useState([]);
+  const [favorites, setFavorites] = useState(() =>
+    safeLoadArray(STORAGE_KEYS.favorites)
+  );
   const [myReviews, setMyReviews] = useState({});
-  const [mustWatch, setMustWatch] = useState([]);
+  const [mustWatch, setMustWatch] = useState(() =>
+    safeLoadArray(STORAGE_KEYS.mustWatch)
+  );
+
+  const persistArray = (key, value) => {
+    if (typeof window === "undefined") return;
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch {
+    }
+  };
 
   const addToFavorites = (movie) => {
     setFavorites((prev) => {
       if (prev.includes(movie.id)) return prev;
+      const next = [...prev, movie.id];
+      persistArray(STORAGE_KEYS.favorites, next);
       notify(`${movie.title || "Movie"} added to favorites`);
-      return [...prev, movie.id];
+      return next;
     });
   };
 
   const removeFromFavorites = (movie) => {
     setFavorites((prev) => {
       const next = prev.filter((mId) => mId !== movie.id);
-      if (next.length !== prev.length) notify(`${movie.title || "Movie"} removed from favorites`);
+      if (next.length !== prev.length) {
+        persistArray(STORAGE_KEYS.favorites, next);
+        notify(`${movie.title || "Movie"} removed from favorites`);
+      }
       return next;
     });
   };
@@ -37,15 +71,20 @@ const MoviesContextProvider = (props) => {
   const addToMustWatch = (movie) => {
     setMustWatch((prev) => {
       if (prev.includes(movie.id)) return prev;
+      const next = [...prev, movie.id];
+      persistArray(STORAGE_KEYS.mustWatch, next);
       notify(`${movie.title || "Movie"} added to Must Watch`);
-      return [...prev, movie.id];
+      return next;
     });
   };
 
   const removeFromMustWatch = (movie) => {
     setMustWatch((prev) => {
       const next = prev.filter((id) => id !== movie.id);
-      if (next.length !== prev.length) notify(`${movie.title || "Movie"} removed from Must Watch`);
+      if (next.length !== prev.length) {
+        persistArray(STORAGE_KEYS.mustWatch, next);
+        notify(`${movie.title || "Movie"} removed from Must Watch`);
+      }
       return next;
     });
   };
@@ -63,7 +102,11 @@ const MoviesContextProvider = (props) => {
     [favorites, mustWatch]
   );
 
-  return <MoviesContext.Provider value={value}>{props.children}</MoviesContext.Provider>;
+  return (
+    <MoviesContext.Provider value={value}>
+      {props.children}
+    </MoviesContext.Provider>
+  );
 };
 
 export default MoviesContextProvider;
