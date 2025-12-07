@@ -78,7 +78,7 @@ export const deleteUserReview = async (id) => {
   }
 
   const headers = {
-    ...getAuthHeader(),        // adds Authorization: BEARER <token>
+    ...getAuthHeader(), 
     "Content-Type": "application/json",
   };
 
@@ -96,7 +96,7 @@ export const deleteUserReview = async (id) => {
 
 export const getUserMovieReviews = async (movieId, token) => {
   if (!token) {
-    return []; // not logged in, no user reviews to fetch
+    return [];
   }
 
   const response = await fetch(
@@ -109,7 +109,6 @@ export const getUserMovieReviews = async (movieId, token) => {
   );
 
   if (!response.ok) {
-    // backend will send 401/403 if token is invalid
     const error = await response.json().catch(() => ({}));
     throw new Error(error.msg || "Failed to load user reviews");
   }

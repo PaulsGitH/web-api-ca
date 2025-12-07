@@ -25,7 +25,7 @@ const EditMovieReviewPage = () => {
  const onSubmit = async (formValues) => {
   try {
     await updateUserReview(
-      review._id,
+      review.id || review._id,
       {
         rating: formValues.rating,
         content: formValues.content,
@@ -38,6 +38,7 @@ const EditMovieReviewPage = () => {
     alert(err.message || "Failed to update review");
   }
 };
+
 
 
   return (
